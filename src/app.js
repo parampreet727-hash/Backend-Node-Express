@@ -1,14 +1,23 @@
 const express = require("express");
 
-const app = express()
+const app = express();
+app.use(express.json());
 
-app.get("/", (req, res)=>{
-    res.send("Hello World !")
-})
+const notes = [];
 
-app.get("/about", (req, res)=>{
-    res.send("About Page")
-})
+app.post("/notes", (req, res) => {
+  notes.push(req.body);
 
+  res.status(201).json({
+    message: "Notes Created Successfully",
+  });
+});
+
+app.get("/notes", (req, res) => {
+    res.status(200).json({
+    message: "Note Fetched Successfully",
+    notes: notes
+  });
+});
 
 module.exports = app;
