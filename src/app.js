@@ -1,31 +1,48 @@
 const express = require("express");
+const userModel = require("./models/user.model");
 
 const app = express();
 app.use(express.json());
 
-const notes = [];
-
-app.post("/notes", (req, res) => {
-  notes.push(req.body);
+app.post("/notes", async (req, res) => {
+  const data = req.body;
+  await userModel.create({
+    username: data.username,
+    userID: data.userID,
+  });
 
   res.status(201).json({
     message: "Notes Created Successfully",
   });
 });
 
-app.get("/notes", (req, res) => {
+app.get("/notes", async (req, res) => {
+  const data = await userModel.find();
+
   res.status(200).json({
     message: "Note Fetched Successfully",
-    notes: notes,
+    users: data,
   });
 });
 
-app.delete("/notes/:index", (req, res) => {
-  const index = req.params.index;
-  delete notes[index];
+app.delete("/notes/:id", async (req, res) => {
+  const id = req.params.id;
+  await userModel.findOneAndDelete({
+    _id: id
+  })
 
   res.status(200).json({
-    message: "note Deleted successfully",
+    message: "Note Deleted successfully",
+  });
+});
+
+app.patch("/notes/:id", async (req, res) => {
+  const id = req.params.id
+  const username = req.body.username;
+  await userModel.findOneAndUpdate({_id: id}, {username : username})
+
+  res.status(200).json({
+    message: "Note Updated Successfully",
   });
 });
 
