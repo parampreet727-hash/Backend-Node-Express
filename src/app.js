@@ -14,9 +14,18 @@ app.post("/notes", (req, res) => {
 });
 
 app.get("/notes", (req, res) => {
-    res.status(200).json({
+  res.status(200).json({
     message: "Note Fetched Successfully",
-    notes: notes
+    notes: notes,
+  });
+});
+
+app.delete("/notes/:index", (req, res) => {
+  const index = req.params.index;
+  delete notes[index];
+
+  res.status(200).json({
+    message: "note Deleted successfully",
   });
 });
 
